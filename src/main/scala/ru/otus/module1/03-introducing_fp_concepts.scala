@@ -2,9 +2,7 @@ package ru.otus.module1
 
 
 
-import ru.otus.module1.variance.{Animal, Cat, animalFeeder}
-
-import java.util.Optional
+import ru.otus.module1.variance.{Animal, Cat}
 import scala.language.postfixOps
 
 

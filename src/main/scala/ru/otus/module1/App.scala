@@ -10,40 +10,16 @@ object App {
     println(s"Hello world from: " +
       s"${Thread.currentThread().getName}")
 
-//    val t1 = new Thread {
-//      override def run(): Unit = {
-//        Thread.sleep(1000)
-//        println(s"Hello from ${Thread.currentThread().getName}")
-//      }
-//    }
-//    val t2 = new MyThread
-//    t1.start()
-//    t1.join()
-//    t2.start()
-
-    def action = {
-      val f1 = getRatesLocation1
-      val f2 = getRatesLocation2
-
-      val r2: concurrency.ToyFuture[Int] = for{
-        i1 <- f1
-        i2 <- f2
-      } yield i1 + i2
-
-      r2.onComplete(println)
-
-//      val r: Unit = f1.onComplete {
-//        case Failure(exception) =>
-//          println(exception.getMessage)
-//        case Success(i1) =>
-//          f2.onComplete {
-//            case Failure(exception) =>
-//              println(exception.getMessage)
-//            case Success(i2) =>
-//              println(s"Result: ${i1 + i2}")
-//          }
-//      }
+    var whiteBallRandomGetters: List[WhiteBallRandomGetter] = List()
+    (1 to 1000000).foreach {_ =>
+      whiteBallRandomGetters = new WhiteBallRandomGetter :: whiteBallRandomGetters
     }
-    printRunningTime(action)
+
+    val whiteBallGettingResult: Double = whiteBallRandomGetters.map(getter => getter.isWhiteBallGot).count(result => result)
+
+    println("Pairs with white balls ".concat(whiteBallGettingResult.toString))
+    println("Collection size ".concat(whiteBallRandomGetters.size.toString))
+    println("Theory result ".concat((whiteBallGettingResult / whiteBallRandomGetters.size).toString))
+
   }
 }

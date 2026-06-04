@@ -1,7 +1,5 @@
 package ru.otus.module1.collectionsHW
 
-import scala.collection.mutable
-
 object collectionsTask {
   def isASCIIString(str: String): Boolean = str.matches("[A-Za-z]+")
 
@@ -50,7 +48,7 @@ object collectionsTask {
       "8" -> "eight",
       "9" -> "nine"
     )
-    
+
     text
         .map(char => digitToStringMap.getOrElse(char.toString, char.toString))
         .reduceOption((s1, s2) => s1.concat(s2)).getOrElse("")

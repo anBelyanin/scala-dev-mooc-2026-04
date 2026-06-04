@@ -1,5 +1,7 @@
 package ru.otus.module1.collectionsHW
 
+import scala.collection.mutable
+
 object collectionsTask {
   def isASCIIString(str: String): Boolean = str.matches("[A-Za-z]+")
 
@@ -15,7 +17,15 @@ object collectionsTask {
    *
    * **/
   def capitalizeIgnoringASCII(text: List[String]): List[String] = {
-    List.empty
+    text.zipWithIndex.collect {
+      case (s, i) => i match {
+        case 0 => s
+        case _ => isASCIIString(s) match {
+          case true => s.toUpperCase()
+          case false => s.toLowerCase
+        }
+      }
+    }
   }
 
   /**
@@ -28,7 +38,22 @@ object collectionsTask {
    * HINT: Для всех возможных комбинаций чисел стоит использовать Map
    * **/
   def numbersToNumericString(text: String): String = {
-    ""
+    val digitToStringMap: Map[String, String] = Map(
+      "0" -> "zero",
+      "1" -> "one",
+      "2" -> "two",
+      "3" -> "three",
+      "4" -> "four",
+      "5" -> "five",
+      "6" -> "six",
+      "7" -> "seven",
+      "8" -> "eight",
+      "9" -> "nine"
+    )
+    
+    text
+        .map(char => digitToStringMap.getOrElse(char.toString, char.toString))
+        .reduceOption((s1, s2) => s1.concat(s2)).getOrElse("")
   }
 
   /**
@@ -46,7 +71,12 @@ object collectionsTask {
    * Реализуйте метод, который примет две коллекции (два источника) и вернёт объединенный список уникальный значений
    **/
   def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+    val uniqueDealerOne: Set[Auto] = dealerOne.toSet
+    val uniqueDealerTwo: Set[Auto] = dealerTwo.toSet
+
+    uniqueDealerOne.collect {
+      case car => if uniqueDealerTwo.contains(car) then car else null
+    }.filter(car => car != null)
   }
 
   /**
@@ -55,6 +85,11 @@ object collectionsTask {
    * и вернёт уникальный список машин обслуживающихся в первом дилерском центре и не обслуживающимся во втором
    **/
   def filterAllLeftDealerAutoWithoutRight(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+    val uniqueDealerOne: Set[Auto] = dealerOne.toSet
+    val uniqueDealerTwo: Set[Auto] = dealerTwo.toSet
+
+    uniqueDealerOne.collect {
+      case car => if !uniqueDealerTwo.contains(car) then car else null
+    }.filter(car => car != null)
   }
 }

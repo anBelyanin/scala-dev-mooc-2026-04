@@ -11,10 +11,16 @@ object higher_kinded_types{
   def tuple[E, A, B](a: Either[E, A], b: Either[E, B]): Either[E, (A, B)] =
     a.flatMap{ a => b.map((a, _))}
 
+  trait ToTupleConverter[F[_]] {
+    def put[A](a : A): F[A]
+    def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]
+    def map[A, B](fa: F[A])(f: A => B): F[B] =
+      flatMap(fa)(a => put(f(a)))
+  }
 
+  def tupleF[F[_], A, B](fa: F[A], fb: F[B])(using converter: ToTupleConverter[F]): F[(A, B)] =
+    converter.flatMap(fa)(a => converter.map(fb)(b => (a, b)))
 
-  def tupleF[F[_], A, B](fa: F[A], fb: F[B]): F[(A, B)] = ???
-  
   trait Bindable[F[_], A] {
     def map[B](f: A => B): F[B]
     def flatMap[B](f: A => F[B]): F[B]

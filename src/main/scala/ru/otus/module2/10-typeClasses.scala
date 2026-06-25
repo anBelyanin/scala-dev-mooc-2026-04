@@ -27,17 +27,17 @@ object type_classes {
   
   object JsonWriter {
     
-    def apply[T](using ev: JsonWriter[T]) = ev
-    
+    def apply[T](implicit ev: JsonWriter[T]) = ev
+
     def from[T](f: T => JsValue): JsonWriter[T] = new JsonWriter[T] {
         override def toJson(v: T): JsValue = f(v)
     }
     
-    given JsonWriter[String] = from[String](JsString)
+    implicit val jsonStringWriter: JsonWriter[String] = from[String](JsString)
 
-    given JsonWriter[Int] = from[Int](JsNumber)
+    implicit val jsonIntWriter: JsonWriter[Int] = from[Int](JsNumber)
     
-    given optJson [T](using jw: JsonWriter[T]): JsonWriter[Option[T]] = from[Option[T]] {
+    implicit def optJson [T](implicit jw: JsonWriter[T]): JsonWriter[Option[T]] = from[Option[T]] {
       case Some(value) => jw.toJson(value)
       case None => JsNull
     }

@@ -27,7 +27,7 @@ object type_classes {
   
   object JsonWriter {
     
-    def apply[T](implicit ev: JsonWriter[T]) = ev
+    def apply[T](implicit ev: JsonWriter[T]): JsonWriter[T] = ev
 
     def from[T](f: T => JsValue): JsonWriter[T] = new JsonWriter[T] {
         override def toJson(v: T): JsValue = f(v)
